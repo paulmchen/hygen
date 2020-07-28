@@ -3,7 +3,7 @@ title: Templates
 id: templates
 ---
 
-A `hygen` template is a header of a markdown-like frontmatter and a body of an ejs templating engine.
+A `hygen` template is a header of a markdown-like [frontmatter](templates/#all-frontmatter-properties) and a body of an ejs templating engine.
 
 ```yaml
 ---                            <----- frontmatter section
@@ -226,11 +226,12 @@ For example to use `actionfolder` say:
 
 ## Addition
 
-By default templates are 'added' to your project as a new target file. By specifying a `to:` frontmatter property, we're telling `hygen` where to put it.
+By default templates are 'added' to your project as a new target file. By specifying a `to:` frontmatter property, we're telling `hygen` where to put it. `force: true` will tell `hygen` to overwrite an existing file without prompting the user ( default is `force: false` ).
 
 ```yaml
 ---
 to: app/index.js
+force: true
 ---
 console.log('this is index!')
 ```
@@ -243,6 +244,18 @@ to: app/index.js
 unless_exists: true
 ---
 will not render if target exists
+```
+
+## From & Shared Templates
+
+By default the body of the template is used as input to create the target file. By specifying a `from:` frontmatter property, we're telling `hygen` from which external file to load the body from. E.g. `from: shared/docs/readme.md` will tell `hygen` to load the body from `_templates/shared/docs/readme.md`. The body of this template is ignored:
+
+```yaml
+---
+to: app/readme.md
+from: shared/docs/readme.md
+---
+THIS BODY IS IGNORED !!!
 ```
 
 ## Injection
@@ -277,7 +290,7 @@ In almost all cases you want to ensure you're not injecting content twice:
 
 * `skip_if` which contains a regular expression / text. If exists, injection is skipped.
 
-Let's see how these play out in the [Redux](/redux) use case.
+Let's see how these play out in the [Redux](/docs/redux) use case.
 
 ## Shell
 
@@ -328,4 +341,18 @@ conditionally rendering template
 
 When `hygen` meets a `to:` value that is `null`, it will skip the output of that template, meaning it won't get rendered at all.
 
-Next up, we'll move on to [generators](/generators).
+Next up, we'll move on to [generators](/docs/generators).
+
+
+## All Frontmatter Properties
+
+| Property                                          | Type         | Default   | Example                                |
+|---------------------------------------------------|--------------|-----------|----------------------------------------|
+| [`to:`](templates/#addition)                 | String (url) | undefined | my-project/readme.md                   |
+| [`from:`](templates/#from--shared-templates) | String (url) | undefined | shared/docs/readme.md                  |
+| [`force:`](templates/#addition)              | Boolean      | false     | true                                   |
+| [`unless_exists:`](templates/#addition)      | Boolean      | false     | true                                   |
+| [`inject:`](templates/#injection)            | Boolean      | false     | true                                   |
+| [`after:`](templates/#injection)             | Regex        | undefined | devDependencies                        |
+| [`skip_if:`](templates/#injection)           | Regex        | undefined | myPackage                              |
+| [`sh:`](templates/#shell)                    | String       | undefined | echo: "Hello this is a shell command!" |

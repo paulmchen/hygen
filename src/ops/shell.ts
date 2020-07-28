@@ -10,7 +10,12 @@ const shell = async (
   const result = createResult('shell', sh)
   if (notEmpty(sh)) {
     if (!args.dry) {
-      await exec(sh, body)
+      try {
+        await exec(sh, body)
+      } catch (error) {
+        logger.err(error.stderr)
+        process.exit(1)
+      }
     }
     logger.ok(`       shell: ${sh}`)
 
